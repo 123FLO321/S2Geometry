@@ -64,11 +64,11 @@ public struct S2Cap: S2Region {
 	
 	/**
 		Create a cap given its axis and its area in steradians. 'axis' should be a
-		unit-length vector, and 'area' should be between 0 and 4 * M_PI.
+		unit-length vector, and 'area' should be between 0 and 4 * Double.pi.
 	*/
 	public init(axis: S2Point, area: Double) {
 		// assert (S2.isUnitLength(axis));
-		self.init(axis: axis, height: area / (2 * M_PI))
+		self.init(axis: axis, height: area / (2 * Double.pi))
 	}
 	
 	/// Return an empty cap, i.e. a cap that contains no points.
@@ -78,7 +78,7 @@ public struct S2Cap: S2Region {
 	public static let full = S2Cap(axis: S2Point(x: 1, y: 0, z: 0), height: 2)
 	
 	public var area: Double {
-		return 2 * M_PI * max(0, height)
+		return 2 * Double.pi * max(0, height)
 	}
 	
 	/// Return the cap opening angle in radians, or a negative number for empty caps.
@@ -181,7 +181,7 @@ public struct S2Cap: S2Region {
 			// optimized by doing the calculation in terms of cap heights rather
 			// than cap opening angles.
 			let angle = axis.angle(to: other.axis) + other.angle.radians
-			if angle >= M_PI {
+			if angle >= Double.pi {
 				return S2Cap(axis: axis, height: 2) //Full cap
 			} else {
 				let d = sin(0.5 * angle)
@@ -269,18 +269,18 @@ public struct S2Cap: S2Region {
 		
 		var allLongitudes = false
 		var lat: (Double, Double) = (0, 0)
-		var lng: (Double, Double) = (-M_PI, M_PI)
+		var lng: (Double, Double) = (-Double.pi, Double.pi)
 		
 		// Check whether cap includes the south pole.
 		lat.0 = axisLatLng.lat.radians - capAngle
-		if lat.0 <= -M_PI_2 {
-			lat.0 = -M_PI_2
+		if lat.0 <= -Double.pi / 2 {
+			lat.0 = -Double.pi / 2
 			allLongitudes = true
 		}
 		// Check whether cap includes the north pole.
 		lat.1 = axisLatLng.lat.radians + capAngle
-		if lat.1 >= M_PI_2 {
-			lat.1 = M_PI_2
+		if lat.1 >= Double.pi / 2 {
+			lat.1 = Double.pi / 2
 			allLongitudes = true
 		}
 		if !allLongitudes {
@@ -299,8 +299,8 @@ public struct S2Cap: S2Region {
 			let sinC = cos(axisLatLng.lat.radians)
 			if sinA <= sinC {
 				let angleA = asin(sinA / sinC)
-				lng.0 = remainder(axisLatLng.lng.radians - angleA, 2 * M_PI)
-				lng.1 = remainder(axisLatLng.lng.radians + angleA, 2 * M_PI)
+				lng.0 = remainder(axisLatLng.lng.radians - angleA, 2 * Double.pi)
+				lng.1 = remainder(axisLatLng.lng.radians + angleA, 2 * Double.pi)
 			}
 		}
 		return S2LatLngRect(lat: R1Interval(lo: lat.0, hi: lat.1), lng: S1Interval(lo: lng.0, hi: lng.1))

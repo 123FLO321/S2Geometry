@@ -70,7 +70,7 @@ public struct S2LatLng: Equatable {
 		longitude is between -180 and 180 degrees inclusive.
 	*/
 	public var isValid: Bool {
-		return abs(lat.radians) <= M_PI_2 && abs(lng.radians) <= M_PI
+		return abs(lat.radians) <= Double.pi / 2 && abs(lng.radians) <= Double.pi
 	}
 	
 	/**
@@ -80,9 +80,9 @@ public struct S2LatLng: Equatable {
 		If the current point is valid then the returned point will have the same coordinates.
 	*/
 	public var normalized: S2LatLng {
-		// drem(x, 2 * S2.M_PI) reduces its argument to the range
-		// [-S2.M_PI, S2.M_PI] inclusive, which is what we want here.
-		return S2LatLng.fromRadians(lat: max(-M_PI_2, min(M_PI_2, lat.radians)), lng: remainder(lng.radians, 2 * M_PI))
+		// drem(x, 2 * S2.Double.pi) reduces its argument to the range
+		// [-S2.Double.pi, S2.Double.pi] inclusive, which is what we want here.
+		return S2LatLng.fromRadians(lat: max(-Double.pi / 2, min(Double.pi / 2, lat.radians)), lng: remainder(lng.radians, 2 * Double.pi))
 	}
 	
 	/// Convert an S2LatLng to the equivalent unit-length vector (S2Point).

@@ -51,25 +51,25 @@ public struct S1Interval: Equatable {
 		var newLo = lo
 		var newHi = hi
 		if !checked {
-			if lo == -M_PI && hi != M_PI {
-				newLo = M_PI
+			if lo == -Double.pi && hi != Double.pi {
+				newLo = Double.pi
 			}
-			if hi == -M_PI && lo != M_PI {
-				newHi = M_PI
+			if hi == -Double.pi && lo != Double.pi {
+				newHi = Double.pi
 			}
 		}
 		self.lo = newLo
 		self.hi = newHi
 	}
 	
-	public static let empty = S1Interval(lo: M_PI, hi: -M_PI, checked: true)
+	public static let empty = S1Interval(lo: Double.pi, hi: -Double.pi, checked: true)
 	
-	public static let full = S1Interval(lo: -M_PI, hi: M_PI, checked: true)
+	public static let full = S1Interval(lo: -Double.pi, hi: Double.pi, checked: true)
 	
 	/// Convenience method to construct an interval containing a single point.
 	public init(point p: Double) {
 		var p = p
-		if p == -M_PI { p = M_PI }
+		if p == -Double.pi { p = Double.pi }
 		self.init(lo: p, hi: p)
 	}
 	
@@ -80,9 +80,9 @@ public struct S1Interval: Equatable {
 	*/
 	public init(p1: Double, p2: Double) {
 		var p1 = p1, p2 = p2
-		if p1 == -M_PI { p1 = M_PI }
-		if p2 == -M_PI { p2 = M_PI }
-		if S1Interval.positiveDistance(p1, p2) <= M_PI {
+		if p1 == -Double.pi { p1 = Double.pi }
+		if p2 == -Double.pi { p2 = Double.pi }
+		if S1Interval.positiveDistance(p1, p2) <= Double.pi {
 			self.init(lo: p1, hi: p2, checked: true)
 		} else {
 			self.init(lo: p2, hi: p1, checked: true)
@@ -94,17 +94,17 @@ public struct S1Interval: Equatable {
 		value -Pi appears only in the empty and full intervals.
 	*/
 	public var isValid: Bool {
-		return (abs(lo) <= M_PI && abs(hi) <= M_PI && !(lo == -M_PI && hi != M_PI) && !(hi == -M_PI && lo != M_PI))
+		return (abs(lo) <= Double.pi && abs(hi) <= Double.pi && !(lo == -Double.pi && hi != Double.pi) && !(hi == -Double.pi && lo != Double.pi))
 	}
 	
 	/// Return true if the interval contains all points on the unit circle.
 	public var isFull: Bool {
-		return hi - lo == 2 * M_PI
+		return hi - lo == 2 * Double.pi
 	}
 	
 	/// Return true if the interval is empty, i.e. it contains no points.
 	public var isEmpty: Bool {
-		return lo - hi == 2 * M_PI
+		return lo - hi == 2 * Double.pi
 	}
 	
 	/// Return true if lo() > hi(). (This is true for empty intervals.)
@@ -117,14 +117,14 @@ public struct S1Interval: Equatable {
 		let center = 0.5 * (lo + hi)
 		if !isInverted { return center }
 		// Return the center in the range (-Pi, Pi].
-		return (center <= 0) ? (center + M_PI) : (center - M_PI)
+		return (center <= 0) ? (center + Double.pi) : (center - Double.pi)
 	}
 	
 	/// Return the length of the interval. The length of an empty interval is negative.
 	public var length: Double {
 		var length = hi - lo
 		if length >= 0 { return length }
-		length += 2 * M_PI
+		length += 2 * Double.pi
 		// Empty intervals have a negative length.
 		return (length > 0) ? length : -1
 	}
@@ -147,9 +147,9 @@ public struct S1Interval: Equatable {
 	/// Return true if the interval (which is closed) contains the point 'p'.
 	public func contains(point p: Double) -> Bool {
 		// Works for empty, full, and singleton intervals.
-		// assert (Math.abs(p) <= S2.M_PI);
+		// assert (Math.abs(p) <= S2.Double.pi);
 		var p = p
-		if (p == -M_PI) { p = M_PI }
+		if (p == -Double.pi) { p = Double.pi }
 		return fastContains(point: p)
 	}
 	
@@ -206,9 +206,9 @@ public struct S1Interval: Equatable {
 	/// Return true if the interior of the interval contains the point 'p'.
 	public func interiorContains(point p: Double) -> Bool {
 		// Works for empty, full, and singleton intervals.
-		// assert (Math.abs(p) <= S2.M_PI);
+		// assert (Math.abs(p) <= S2.Double.pi);
 		var p = p
-		if (p == -M_PI) { p = M_PI }
+		if (p == -Double.pi) { p = Double.pi }
 		
 		if isInverted {
 			return p > lo || p < hi
@@ -261,10 +261,10 @@ public struct S1Interval: Equatable {
 		given point "p" (an angle in the range [-Pi, Pi]).
 	*/
 	public func add(point p: Double) -> S1Interval {
-		// assert (Math.abs(p) <= S2.M_PI);
+		// assert (Math.abs(p) <= S2.Double.pi);
 		var p = p
-		if p == -M_PI {
-			p = M_PI
+		if p == -Double.pi {
+			p = Double.pi
 		}
 		
 		if fastContains(point: p) {
@@ -297,15 +297,15 @@ public struct S1Interval: Equatable {
 		
 		// Check whether this interval will be full after expansion, allowing
 		// for a 1-bit rounding error when computing each endpoint.
-		if length + 2 * radius >= 2 * M_PI - 1e-15 {
+		if length + 2 * radius >= 2 * Double.pi - 1e-15 {
 			return .full
 		}
 		
-		// NOTE(dbeaumont): Should this remainder be 2 * M_PI or just M_PI ??
-		var lo = remainder(self.lo - radius, 2 * M_PI)
-		let hi = remainder(self.hi + radius, 2 * M_PI)
-		if lo == -M_PI {
-			lo = M_PI
+		// NOTE(dbeaumont): Should this remainder be 2 * Double.pi or just Double.pi ??
+		var lo = remainder(self.lo - radius, 2 * Double.pi)
+		let hi = remainder(self.hi + radius, 2 * Double.pi)
+		if lo == -Double.pi {
+			lo = Double.pi
 		}
 		return S1Interval(lo: lo, hi: hi)
 	}
@@ -352,7 +352,7 @@ public struct S1Interval: Equatable {
 	
 	/**
 		Compute the distance from "a" to "b" in the range [0, 2*Pi). This is
-		equivalent to (drem(b - a - S2.M_PI, 2 * S2.M_PI) + S2.M_PI), except that
+		equivalent to (drem(b - a - S2.Double.pi, 2 * S2.Double.pi) + S2.Double.pi), except that
 		it is more numerically stable (it does not lose precision for very small
 		positive distances).
 	*/
@@ -361,7 +361,7 @@ public struct S1Interval: Equatable {
 		if d >= 0 { return d }
 		// We want to ensure that if b == Pi and a == (-Pi + eps),
 		// the return result is approximately 2*Pi and not zero.
-		return (b + M_PI) - (a - M_PI)
+		return (b + Double.pi) - (a - Double.pi)
 	}
 	
 }

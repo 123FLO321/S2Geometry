@@ -74,7 +74,7 @@ public struct S2LatLngRect: S2Region, Equatable {
 	
 	/// The full allowable range of latitudes.
 	public static var fullLat: R1Interval {
-		return R1Interval(lo: -M_PI_2, hi: M_PI_2)
+		return R1Interval(lo: -Double.pi / 2, hi: Double.pi / 2)
 	}
 	
 	/// The full allowable range of longitudes.
@@ -89,7 +89,7 @@ public struct S2LatLngRect: S2Region, Equatable {
 	*/
 	public var isValid: Bool {
 		// The lat/lng ranges must either be both empty or both non-empty.
-		return (abs(lat.lo) <= M_PI_2 && abs(lat.hi) <= M_PI_2 && lng.isValid && lat.isEmpty == lng.isEmpty)
+		return (abs(lat.lo) <= Double.pi / 2 && abs(lat.hi) <= Double.pi / 2 && lng.isValid && lat.isEmpty == lng.isEmpty)
 	}
 	
 	/// Return true if the rectangle is empty, i.e. it contains no points at all.
@@ -152,7 +152,7 @@ public struct S2LatLngRect: S2Region, Equatable {
 		
 		let lo = S2LatLng.fromRadians(lat: a.lat.lo, lng: aLng).point
 		let hi = S2LatLng.fromRadians(lat: a.lat.hi, lng: aLng).point
-		let loCrossHi = S2LatLng.fromRadians(lat: 0, lng: aLng - M_PI_2).normalized.point
+		let loCrossHi = S2LatLng.fromRadians(lat: 0, lng: aLng - Double.pi / 2).normalized.point
 		return S2EdgeUtil.getDistance(x: p.point, a: lo, b: hi, aCrossB: loCrossHi)
 	}
 	
@@ -209,10 +209,10 @@ public struct S2LatLngRect: S2Region, Equatable {
 		// distance tests.
 		let aLo = S2LatLng.fromRadians(lat: a.lat.lo, lng: aLng).point
 		let aHi = S2LatLng.fromRadians(lat: a.lat.hi, lng: aLng).point
-		let aLoCrossHi = S2LatLng.fromRadians(lat: 0, lng: aLng - M_PI_2).normalized.point
+		let aLoCrossHi = S2LatLng.fromRadians(lat: 0, lng: aLng - Double.pi / 2).normalized.point
 		let bLo = S2LatLng.fromRadians(lat: b.lat.lo, lng: bLng).point
 		let bHi = S2LatLng.fromRadians(lat: b.lat.hi, lng: bLng).point
-		let bLoCrossHi = S2LatLng.fromRadians(lat: 0, lng: bLng - M_PI_2).normalized.point
+		let bLoCrossHi = S2LatLng.fromRadians(lat: 0, lng: bLng - Double.pi / 2).normalized.point
 		
 		return min(S2EdgeUtil.getDistance(x: aLo, a: bLo, b: bHi, aCrossB: bLoCrossHi),
 			min(S2EdgeUtil.getDistance(x: aHi, a: bLo, b: bHi, aCrossB: bLoCrossHi),
@@ -481,10 +481,10 @@ public struct S2LatLngRect: S2Region, Equatable {
 		if lat.lo + lat.hi < 0 {
 			// South pole axis yields smaller cap.
 			poleZ = -1
-			poleAngle = M_PI_2 + lat.hi
+			poleAngle = Double.pi / 2 + lat.hi
 		} else {
 			poleZ = 1
-			poleAngle = M_PI_2 - lat.lo
+			poleAngle = Double.pi / 2 - lat.lo
 		}
 		let poleCap = S2Cap(axis: S2Point(x: 0, y: 0, z: poleZ), angle: S1Angle(radians: poleAngle))
 		
@@ -493,8 +493,8 @@ public struct S2LatLngRect: S2Region, Equatable {
 		// rectangles that are larger than 180 degrees, we punt and always return a
 		// bounding cap centered at one of the two poles.
 		let lngSpan = lng.hi - lng.lo
-		if remainder(lngSpan, 2 * M_PI) >= 0 {
-			if lngSpan < 2 * M_PI {
+		if remainder(lngSpan, 2 * Double.pi) >= 0 {
+			if lngSpan < 2 * Double.pi {
 				var midCap = S2Cap(axis: center.point, angle: S1Angle(radians: 0))
 				for k in 0 ..< 4 {
 					midCap = midCap.add(point: getVertex(k: k).point)

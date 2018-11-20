@@ -85,8 +85,8 @@ public struct S2Projections {
 		let x: Double
 		switch s2Projection {
 		case .linear:		x = 1 / (3 * sqrt(3))				// 0.192
-		case .tan:			x = (M_PI * M_PI) / (16 * M_SQRT2)	// 0.436
-		case .quadratic:	x = 2 * M_SQRT2 / 9					// 0.314
+		case .tan:			x = (Double.pi * Double.pi) / (16 * 2.squareRoot())	// 0.436
+		case .quadratic:	x = 2 * 2.squareRoot() / 9					// 0.314
 		}
 		return S2.Metric(dim: 2, deriv: x)
 	}()
@@ -95,13 +95,13 @@ public struct S2Projections {
 		let x: Double
 		switch s2Projection {
 		case .linear:		x = 1						// 1.000
-		case .tan:			x = M_PI * M_PI / 16			// 0.617
+		case .tan:			x = Double.pi * Double.pi / 16			// 0.617
 		case .quadratic:	x = 0.65894981424079037		// 0.659
 		}
 		return S2.Metric(dim: 2, deriv: x)
 	}()
 	
-	public static let avgArea = S2.Metric(dim: 2, deriv: M_PI / 6) // 0.524
+	public static let avgArea = S2.Metric(dim: 2, deriv: Double.pi / 6) // 0.524
 	
 	// Each cell is bounded by four planes passing through its four edges and
 	// the center of the sphere. These metrics relate to the angle between each
@@ -115,7 +115,7 @@ public struct S2Projections {
 		let x: Double
 		switch s2Projection {
 		case .linear:		x = 0.5						// 0.500
-		case .tan:			x = M_PI / 4					// 0.785
+		case .tan:			x = Double.pi / 4					// 0.785
 		case .quadratic:	x = 2 / 3					// 0.667
 		}
 		return S2.Metric(dim: 1, deriv: x)
@@ -125,13 +125,13 @@ public struct S2Projections {
 		let x: Double
 		switch s2Projection {
 		case .linear:		x = 1						// 1.000
-		case .tan:			x = M_PI / 4					// 0.785
+		case .tan:			x = Double.pi / 4					// 0.785
 		case .quadratic:	x = 0.85244858959960922		// 0.852
 		}
 		return S2.Metric(dim: 1, deriv: x)
 	}()
 	
-	public static let avgAngleSpan = S2.Metric(dim: 1, deriv: M_PI / 4) // 0.785
+	public static let avgAngleSpan = S2.Metric(dim: 1, deriv: Double.pi / 4) // 0.785
 	
 	// The width of geometric figure is defined as the distance between two
 	// parallel bounding lines in a given direction. For cells, the minimum
@@ -156,8 +156,8 @@ public struct S2Projections {
 		let x: Double
 		switch s2Projection {
 		case .linear:		x = 1 / sqrt(6)				// 0.408
-		case .tan:			x = M_PI / (4 * M_SQRT2)		// 0.555
-		case .quadratic:	x = M_SQRT2 / 3				// 0.471
+		case .tan:			x = Double.pi / (4 * 2.squareRoot())		// 0.555
+		case .quadratic:	x = 2.squareRoot() / 3				// 0.471
 		}
 		return S2.Metric(dim: 1, deriv: x)
 	}()
@@ -187,9 +187,9 @@ public struct S2Projections {
 	public static let minEdge: S2.Metric = {
 		let x: Double
 		switch s2Projection {
-		case .linear:		x = M_SQRT2 / 3				// 0.471
-		case .tan:			x = M_PI / (4 * M_SQRT2)		// 0.555
-		case .quadratic:	x = M_SQRT2 / 3				// 0.471
+		case .linear:		x = 2.squareRoot() / 3				// 0.471
+		case .tan:			x = Double.pi / (4 * 2.squareRoot())		// 0.555
+		case .quadratic:	x = 2.squareRoot() / 3				// 0.471
 		}
 		return S2.Metric(dim: 1, deriv: x)
 	}()
@@ -218,9 +218,9 @@ public struct S2Projections {
 	public static let minDiag: S2.Metric = {
 		let x: Double
 		switch s2Projection {
-		case .linear:		x = M_SQRT2 / 3				// 0.471
-		case .tan:			x = M_PI / (3 * M_SQRT2)		// 0.740
-		case .quadratic:	x = 4 * M_SQRT2 / 9			// 0.629
+		case .linear:		x = 2.squareRoot() / 3				// 0.471
+		case .tan:			x = Double.pi / (3 * 2.squareRoot())		// 0.740
+		case .quadratic:	x = 4 * 2.squareRoot() / 9			// 0.629
 		}
 		return S2.Metric(dim: 1, deriv: x)
 	}()
@@ -228,8 +228,8 @@ public struct S2Projections {
 	public static let maxDiag: S2.Metric = {
 		let x: Double
 		switch s2Projection {
-		case .linear:		x = M_SQRT2					// 1.414
-		case .tan:			x = M_PI / sqrt(6)			// 1.283
+		case .linear:		x = 2.squareRoot()					// 1.414
+		case .tan:			x = Double.pi / sqrt(6)			// 1.283
 		case .quadratic:	x = 1.2193272972170106		// 1.219
 		}
 		return S2.Metric(dim: 1, deriv: x)
@@ -251,8 +251,8 @@ public struct S2Projections {
 	public static let maxEdgeAspect: Double = {
 		let x: Double
 		switch s2Projection {
-		case .linear:		x = M_SQRT2					// 1.414
-		case .tan:			x = M_SQRT2					// 1.414
+		case .linear:		x = 2.squareRoot()					// 1.414
+		case .tan:			x = 2.squareRoot()					// 1.414
 		case .quadratic:	x = 1.44261527445268292		// 1.443
 		}
 		return x
@@ -268,13 +268,13 @@ public struct S2Projections {
 		case .linear:
 			return s
 		case .tan:
-			// Unfortunately, tan(M_PI_4) is slightly less than 1.0. This isn't due
+			// Unfortunately, tan(Double.pi / 4) is slightly less than 1.0. This isn't due
 			// to a flaw in the implementation of tan(), it's because the derivative of
 			// tan(x) at x=pi/4 is 2, and it happens that the two adjacent floating
 			// point numbers on either side of the infinite-precision value of pi/4
 			// have tangents that are slightly below and slightly above 1.0 when rounded
 			// to the nearest double-precision result.
-			let x = tan(M_PI_4 * s)
+			let x = tan(Double.pi / 4 * s)
 			return x + (1.0 / Double(1 << 53)) * x
 		case .quadratic:
 			if s >= 0 {

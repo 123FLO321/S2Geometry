@@ -39,7 +39,8 @@ public struct S2 {
 	*/
 	static func exp(v: Double) -> Int {
 		guard v != 0 else { return 0 }
-		let bits = unsafeBitCast(v, to: Int64.self)
+        
+        let bits = Int64(bitPattern: v.bitPattern)
 		return Int((exponentMask & bits) >> Int64(exponentShift)) - 1022
 	}
 	
@@ -140,7 +141,7 @@ public struct S2 {
 			always a valid level.
 		*/
 		public func getClosestLevel(value: Double) -> Int {
-			return getMinLevel(value: M_SQRT2 * value)
+			return getMinLevel(value: 2.squareRoot() * value)
 		}
 		
 		/**

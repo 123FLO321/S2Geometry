@@ -214,12 +214,12 @@ public struct S2CellId: Comparable, Hashable {
 	public var level: Int {
 		// Fast path for leaf cells.
 		guard !isLeaf else { return S2CellId.maxLevel }
-		var x = Int32(truncatingBitPattern: id)
+        var x = Int32(truncatingIfNeeded: id)
 		var level = -1
 		if x != 0 {
 			level += 16
 		} else {
-			x = Int32(truncatingBitPattern: id >> Int64(32))
+            x = Int32(truncatingIfNeeded: id >> Int64(32))
 		}
 		// We only need to look at even-numbered bits to determine the
 		// level of a valid cell id.
@@ -354,10 +354,8 @@ public struct S2CellId: Comparable, Hashable {
 	*/
 	public func next() -> S2CellId {
 		
-		
-		
-		return S2CellId(id: Int64.addWithOverflow(id, lowestOnBit << 1).0)
-	}
+		return S2CellId(id: id.addingReportingOverflow( lowestOnBit << 1).partialValue)
+    }
 	
 	/**
 		Return the previous cell at the same level along the Hilbert curve. Works
@@ -365,7 +363,7 @@ public struct S2CellId: Comparable, Hashable {
 		around from the last face to the first or vice versa.
 	*/
 	public func prev() -> S2CellId {
-		return S2CellId(id: Int64.subtractWithOverflow(id, lowestOnBit << 1).0)
+        return S2CellId(id: id.subtractingReportingOverflow(lowestOnBit << 1).partialValue)
 	}
 	
 	/**
@@ -411,7 +409,7 @@ public struct S2CellId: Comparable, Hashable {
 		fewer characters. The maximum token length is 16.
 	*/
 	public init(token: String) throws {
-		let chars = Array(token.characters)
+		let chars = Array(token)
 
 		guard chars.count > 0 else {
 			throw NumberFormatException("Empty string in S2CellId.fromToken")
@@ -452,16 +450,15 @@ public struct S2CellId: Comparable, Hashable {
 	var token: String {
 		guard id != 0 else { return "X" }
 		var hex = String(uid, radix: 16).lowercased()
-		for _ in 0 ..< max(0, 16 - hex.characters.count) {
+		for _ in 0 ..< max(0, 16 - hex.count) {
 			hex.insert("0", at: hex.startIndex)
 		}
-		let chars = hex.characters
-		var len = chars.count
-		for char in chars.reversed() {
+		var len = hex.count
+		for char in hex.reversed() {
 			guard char == "0" else { break }
 			len -= 1
 		}
-		return String(chars.prefix(len))
+        return String(hex.prefix(len))
 	}
 
 	/**
@@ -772,7 +769,7 @@ public struct S2CellId: Comparable, Hashable {
 		
 //		UInt64
 		
-		return Int(truncatingBitPattern: (uid >> 32) + uid)
+        return Int(truncatingIfNeeded: (uid >> 32) + uid)
 	}
 	
 	/**

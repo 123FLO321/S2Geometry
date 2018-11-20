@@ -41,15 +41,15 @@ public struct S2Loop: S2Region, Comparable {
 			super.init()
 		}
 		
-		private override var numEdges: Int {
+		public override var numEdges: Int {
 			return loop.numVertices
 		}
 		
-		private override func edgeFrom(index: Int) -> S2Point {
+		public override func edgeFrom(index: Int) -> S2Point {
 			return loop.vertex(index)
 		}
 		
-		private override func edgeTo(index: Int) -> S2Point {
+		public override func edgeTo(index: Int) -> S2Point {
 			return loop.vertex(index + 1)
 		}
 		
@@ -166,7 +166,7 @@ public struct S2Loop: S2Region, Comparable {
 	/// Return true if the loop area is at most 2*Pi.
 	public var isNormalized: Bool {
 		// We allow a bit of error so that exact hemispheres are considered normalized.
-		return area <= 2 * M_PI + 1e-14
+		return area <= 2 * Double.pi + 1e-14
 	}
 
 	/// Invert the loop if necessary so that the area enclosed by the loop is at most 2*Pi.
@@ -190,7 +190,7 @@ public struct S2Loop: S2Region, Comparable {
 		index = S2LoopEdgeIndex(loop: self)
 		originInside = !originInside
 		
-		if bound.lat.lo > -M_PI_2 && bound.lat.hi < M_PI_2 {
+		if bound.lat.lo > -Double.pi / 2 && bound.lat.hi < Double.pi / 2 {
 			// The complement of this loop contains both poles.
 			bound = .full
 		} else {
@@ -249,7 +249,7 @@ public struct S2Loop: S2Region, Comparable {
 		// The calculated area at this point should be between -4*Pi and 4*Pi,
 		// although it may be slightly larger or smaller than this due to
 		// numerical errors.
-		// assert (Math.abs(areaSum) <= 4 * S2.M_PI + 1e-12);
+		// assert (Math.abs(areaSum) <= 4 * S2.Double.pi + 1e-12);
 
 		if (areaSum < 0) {
 			// If the area is negative, we have computed the area to the right of the
@@ -258,7 +258,7 @@ public struct S2Loop: S2Region, Comparable {
 			// of position over the region to the right of the loop. This is the same
 			// as the integral of position over the region to the left of the loop,
 			// since the integral of position over the entire sphere is (0, 0, 0).
-			areaSum += 4 * M_PI
+			areaSum += 4 * Double.pi
 		}
 		// The loop's sign() does not affect the return result and should be taken
 		// into account by the caller.
@@ -497,7 +497,7 @@ public struct S2Loop: S2Region, Comparable {
 		
 		// The furthest point from p on the sphere is its antipode, which is an
 		// angle of PI radians. This is an upper bound on the angle.
-		var minDistance = S1Angle(radians: M_PI)
+		var minDistance = S1Angle(radians: Double.pi)
 		for i in 0 ..< numVertices {
 			minDistance = min(minDistance, S2EdgeUtil.getDistance(x: normalized, a: vertex(i), b: vertex(i + 1)))
 		}
@@ -566,9 +566,9 @@ public struct S2Loop: S2Region, Comparable {
 					// intersections between edge pairs where all four points are
 					// nearly colinear.
 					let abc = S2.angle(a: vertex(a1), b: vertex(a2), c: vertex(b1))
-					let abcNearlyLinear = S2.approxEquals(abc, 0, maxError: S2Loop.maxIntersectionError) || S2.approxEquals(abc, M_PI, maxError: S2Loop.maxIntersectionError)
+					let abcNearlyLinear = S2.approxEquals(abc, 0, maxError: S2Loop.maxIntersectionError) || S2.approxEquals(abc, Double.pi, maxError: S2Loop.maxIntersectionError)
 					let abd = S2.angle(a: vertex(a1), b: vertex(a2), c: vertex(b2));
-					let abdNearlyLinear = S2.approxEquals(abd, 0, maxError: S2Loop.maxIntersectionError) || S2.approxEquals(abd, M_PI, maxError: S2Loop.maxIntersectionError)
+					let abdNearlyLinear = S2.approxEquals(abd, 0, maxError: S2Loop.maxIntersectionError) || S2.approxEquals(abd, Double.pi, maxError: S2Loop.maxIntersectionError)
 					if abcNearlyLinear && abdNearlyLinear { continue }
 					
 					if previousIndex != b1 {
@@ -637,14 +637,14 @@ public struct S2Loop: S2Region, Comparable {
 		// contains() does a bounding rectangle check before doing anything else.
 		bound = .full
 		if contains(point: S2Point(x: 0, y: 0, z: 1)) {
-			b = S2LatLngRect(lat: R1Interval(lo: b.lat.lo, hi: M_PI_2), lng: .full)
+			b = S2LatLngRect(lat: R1Interval(lo: b.lat.lo, hi: Double.pi / 2), lng: .full)
 		}
 		// If a loop contains the south pole, then either it wraps entirely
 		// around the sphere (full longitude range), or it also contains the
 		// north pole in which case b.lng().isFull() due to the test above.
 		
 		if b.lng.isFull && contains(point: S2Point(x: 0, y: 0, z: -1)) {
-			b = S2LatLngRect(lat: R1Interval(lo: -M_PI_2, hi: b.lat.hi), lng: b.lng)
+			b = S2LatLngRect(lat: R1Interval(lo: -Double.pi / 2, hi: b.lat.hi), lng: b.lng)
 		}
 		bound = b
 	}

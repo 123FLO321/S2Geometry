@@ -17,7 +17,7 @@ public struct S1Angle: Equatable, Comparable {
 	public let radians: Double
 	
 	public var degrees: Double {
-		return radians * (180 / M_PI)
+		return radians * (180 / Double.pi)
 	}
 	
 	private func getInteger(multipliedBy m: Double) -> Int64 {
@@ -33,7 +33,7 @@ public struct S1Angle: Equatable, Comparable {
 	}
 	
 	public init(degrees: Double) {
-		self.radians = degrees * (M_PI / 180)
+		self.radians = degrees * (Double.pi / 180)
 	}
 	
 	public init(e5: Int64) {
