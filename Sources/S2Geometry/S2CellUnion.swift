@@ -101,7 +101,7 @@ public struct S2CellUnion: S2Region {
 		// assert (levelMod >= 1 && levelMod <= 3);
 		
 		var output: [S2CellId] = []
-		output.reserveCapacity(cellIds.count)
+		//output.reserveCapacity(cellIds.count)
 		
 		for id in cellIds {
 			let level = id.level
@@ -116,10 +116,10 @@ public struct S2CellUnion: S2Region {
 				output.append(id)
 			} else {
 				let end = id.childEnd(level: newLevel)
-				
-				var childId = id.childBegin()
+                
+				var childId = id.childBegin(level: newLevel)
 				while childId != end {
-					output.append(id)
+					output.append(childId)
 					childId = childId.next()
 				}
 			}
@@ -275,11 +275,11 @@ public struct S2CellUnion: S2Region {
 //		cellIds.add(id);
 //		} else {
 //		int pos = Collections.binarySearch(x.cellIds, id.rangeMin());
-//		
+//
 //		if (pos < 0) {
 //		pos = -pos - 1;
 //		}
-//		
+//
 //		S2CellId idmax = id.rangeMax();
 //		int size = x.cellIds.size();
 //		while (pos < size && x.cellIds.get(pos).lessOrEquals(idmax)) {
@@ -294,16 +294,16 @@ public struct S2CellUnion: S2Region {
 	*/
 	public mutating func getIntersection(x: S2CellUnion, y: S2CellUnion) {
 //		// assert (x != this && y != this);
-//		
+//
 //		// This is a fairly efficient calculation that uses binary search to skip
 //		// over sections of both input vectors. It takes constant time if all the
 //		// cells of "x" come before or after all the cells of "y" in S2CellId order.
-//		
+//
 //		cellIds.clear();
-//		
+//
 //		int i = 0;
 //		int j = 0;
-//		
+//
 //		while (i < x.cellIds.size() && j < y.cellIds.size()) {
 //		S2CellId imin = x.cellId(i).rangeMin();
 //		S2CellId jmin = y.cellId(j).rangeMin();
