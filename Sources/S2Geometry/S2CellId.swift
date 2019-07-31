@@ -481,7 +481,7 @@ public struct S2CellId: Comparable, Hashable {
 		}
 
 		// current < 0: high bit is set
-		return true
+        // return true
 	}
 	
 	// calculated as 0xffffffffffffffff / radix
@@ -764,6 +764,10 @@ public struct S2CellId: Comparable, Hashable {
 	public var lowestOnBit: Int64 {
 		return id & -id
 	}
+    
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(self.hashValue)
+    }
 	
 	public var hashValue: Int {
 		

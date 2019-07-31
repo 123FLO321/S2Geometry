@@ -95,6 +95,10 @@ public struct S2Point: Comparable, Hashable {
 	}
 	
 	// MARK: Hashable
+    
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(self.hashValue)
+    }
 	
 	public var hashValue: Int {
 		var value: UInt64 = 17
